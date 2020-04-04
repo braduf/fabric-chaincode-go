@@ -21,6 +21,9 @@ import (
 	"google.golang.org/grpc/keepalive"
 )
 
+// TLS <key, cert, cacert> tuples for client and server were created
+// using cryptogen tool. Of course, any standard tool such as openssl
+// could have been used as well
 var keyPEM = `-----BEGIN PRIVATE KEY-----
 MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgKg8jpiNIB5LXLull
 IRoYMsQximSiU7XvGCYLslx4GauhRANCAARBGdslxalpg0dxk9GwVhi+Qw9oKZPE
@@ -161,7 +164,7 @@ func TestLoadBase64EncodedConfig(t *testing.T) {
 	tlsConfig := &tls.Config{
 		MinVersion:   tls.VersionTLS12,
 		Certificates: []tls.Certificate{clientCert},
-		ClientCAs:    rootPool,
+		RootCAs:      rootPool,
 	}
 
 	kaOpts := keepalive.ClientParameters{
@@ -326,7 +329,7 @@ func TestLoadBase64EncodedConfig(t *testing.T) {
 	tlsServerNonMutualConfig := &tls.Config{
 		MinVersion:             tls.VersionTLS12,
 		Certificates:           []tls.Certificate{clientCert},
-		ClientCAs:              nil,
+		RootCAs:                nil,
 		SessionTicketsDisabled: true,
 		CipherSuites: []uint16{tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
 			tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
@@ -465,7 +468,7 @@ func TestLoadPEMEncodedConfig(t *testing.T) {
 	tlsConfig := &tls.Config{
 		MinVersion:   tls.VersionTLS12,
 		Certificates: []tls.Certificate{clientCert},
-		ClientCAs:    rootPool,
+		RootCAs:      rootPool,
 	}
 
 	kaOpts := keepalive.ClientParameters{
